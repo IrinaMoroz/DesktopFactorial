@@ -23,15 +23,17 @@ namespace DesktopFactorial
     /// </summary>
     public partial class MainWindow : Window
     {
-        private  BackgroundWorker worker = new BackgroundWorker();
+        private  BackgroundWorker worker;
         private int value = 0;
 
         public MainWindow()
         {
             InitializeComponent();
-            worker.DoWork += worker_DoWork;
+            worker = new BackgroundWorker(); // variable declared in the class
+            worker.WorkerReportsProgress = true;
+            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            worker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker1_ProgressChanged);
             worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            worker.ProgressChanged += worker_ProgressChanged;
         }
 
         private void OnClick1(object sender, RoutedEventArgs e)
@@ -43,69 +45,63 @@ namespace DesktopFactorial
                 tbMonitor.Text = str + " is not a number";
                 return;
             }
+            if(value < 0)
+            {
+                tbMonitor.Text = "Your number is too small "+ str;
+                return;
+            }
+
             btCalc.IsEnabled = false;
             tbValue.IsEnabled = false;
 
             tbMonitor.Text = String.Empty;
             pbStatus.Maximum = value;
 
-            /*for (int i = 1; i <= value; i++)
+            worker.RunWorkerAsync(value);
+        }
+
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            for (int i = 1; i <= (int)e.Argument; i++)
             {
                 BigInteger res = new BigInteger();
                 if (i >= 2)
                 {
                     res = GetFactorial(i);
-                    tbMonitor.Text += String.Format("{0}!={1}\n", i, res.ToString());
+                    App.Current.Dispatcher.Invoke((Action)delegate()
+                    {
+                        tbMonitor.Text += String.Format("{0}!={1}\n", i, res.ToString());
+                    });
+                    worker.ReportProgress(i);
                 }
-                pbStatus.Value = i;                
-            }*/
-            for (int i = 1; i <= value; i++)
-            {
-                worker.RunWorkerAsync(i);
-                worker.CancelAsync();
-            }           
+                Thread.Sleep(50);
+            }
+            
         }
 
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            e.Result = GetFactorial((int)e.Argument, worker);                
+            pbStatus.Value = e.ProgressPercentage;
         }
 
-        private void worker_RunWorkerCompleted(object sender,
-                                               RunWorkerCompletedEventArgs e)
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
             {
                 MessageBox.Show(e.Error.Message);
             }
-            tbMonitor.Text += String.Format("{0}!={1}\n", 1, e.Result.ToString());
-            
+
             btCalc.IsEnabled = true;
             tbValue.IsEnabled = true;
         }
 
-        private void worker_ProgressChanged(object sender,
-            ProgressChangedEventArgs e)
+        private BigInteger GetFactorial(int val)
         {
-            pbStatus.Value = e.ProgressPercentage;
-        }
-
-        private BigInteger GetFactorial(int val, BackgroundWorker bworker)
-        {
-            if (val < 0)
-            {
-                throw new ArgumentException(
-                    "value must be >= 0", "val");
-            }
+            
             BigInteger res = 1;
             for (int i = 1; i <= val; i++)
             {
                 res *= i;
-
-                int percentComplete =
-                    (int)((float)i / (float)val * 100);
-               // bworker.ReportProgress(percentComplete);
             }
 
             return res;
