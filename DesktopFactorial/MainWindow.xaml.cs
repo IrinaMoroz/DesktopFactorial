@@ -30,9 +30,9 @@ namespace DesktopFactorial
             InitializeComponent();
             worker = new BackgroundWorker(); // variable declared in the class
             worker.WorkerReportsProgress = true;
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker1_ProgressChanged);
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            worker.DoWork += Worker_DoWork;
+            worker.ProgressChanged += Worker_ProgressChanged;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
         }
 
         private void button_ClickCalc(object sender, RoutedEventArgs e)
@@ -60,7 +60,7 @@ namespace DesktopFactorial
             worker.RunWorkerAsync(value);
         }
 
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             for (int i = 2; i <= (int)e.Argument; i++)
             {
@@ -74,14 +74,14 @@ namespace DesktopFactorial
             
         }
 
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             pbStatus.Value = e.ProgressPercentage;
             BigInteger[] ar = (BigInteger[])e.UserState;
             tbMonitor.Text += String.Format("{0}!={1}\n", ar[0], ar[1]);
         }
 
-        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
                 MessageBox.Show(e.Error.Message);
