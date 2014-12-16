@@ -25,7 +25,7 @@
                      
                      Height="25" Margin="10,47,10,398"/>
         <TextBox x:Name="tbMonitor" 
-                 Margin="10,98,10,10"
+                 Margin="10,77,10,10"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  FontFamily="Latha"
