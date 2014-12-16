@@ -28,6 +28,10 @@ namespace DesktopFactorial
         public MainWindow()
         {
             InitializeComponent();
+            InitializeBackgroundWorker();
+        }
+        private void InitializeBackgroundWorker()
+        {
             worker = new BackgroundWorker(); // variable declared in the class
             worker.WorkerReportsProgress = true;
             worker.DoWork += Worker_DoWork;

@@ -1,13 +1,33 @@
 ﻿<Window x:Class="DesktopFactorial.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="500" Width="600">
+        Title="MainWindow" Height="510" Width="620">
     <Grid>
+
         <TextBox x:Name="tbValue" 
-                 Margin="10,10,122,425"
-                 MaxLength="10"/>
+        	Width="450" Height="25"
+        	MaxLength="10" 
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="15"/>
+        <Button
+            x:Name="btCalc"
+            Width="124" Height="35"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="470,10,0,0"
+            BorderBrush="Black" BorderThickness="1"
+            Click="button_ClickCalc" ClickMode="Press" 
+            >Calc</Button>
+        <ProgressBar x:Name="pbStatus" 
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Top"
+                     
+                     Height="25" Margin="10,47,10,398"/>
         <TextBox x:Name="tbMonitor" 
                  Margin="10,98,10,10"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
                  FontFamily="Latha"
                  FontStyle="Oblique"
                  FontSize="14"
@@ -15,14 +35,6 @@
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
                  >Hello! Put the number!!</TextBox>
-        <Button
-            x:Name="btCalc"
-            Margin="475,10,10,425"
-            BorderBrush="Black" BorderThickness="1" 
-            Click="button_ClickCalc" ClickMode="Press">Calc</Button>
-
-        <ProgressBar x:Name="pbStatus" Margin="10,50,10,391" />
-
-
+        
     </Grid>
 </Window>
