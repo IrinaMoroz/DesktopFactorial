@@ -24,8 +24,7 @@ namespace DesktopFactorial
     public partial class MainWindow : Window
     {
         private  BackgroundWorker worker;
-        private int value = 0;
-
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -36,9 +35,10 @@ namespace DesktopFactorial
             worker.RunWorkerCompleted += worker_RunWorkerCompleted;
         }
 
-        private void OnClick1(object sender, RoutedEventArgs e)
+        private void button_ClickCalc(object sender, RoutedEventArgs e)
         {
             string str = tbValue.Text;
+            int value = 0;
 
             if (!Int32.TryParse(str, out value))
             {
@@ -68,28 +68,19 @@ namespace DesktopFactorial
                 if (i >= 2)
                 {
                     res = GetFactorial(i);
-                    try
-                    {
-                        App.Current.Dispatcher.Invoke((Action)delegate()
-                        {
-                            tbMonitor.Text += String.Format("{0}!={1}\n", i, res.ToString());
-                        });
-                    }catch(NullReferenceException )
-                    {
-                        MessageBox.Show("Exception appears");
-                    }
-
+                    worker.ReportProgress(i, new[]{i, res});                 
                     
-                    worker.ReportProgress(i);
                 }
                 Thread.Sleep(50);
             }
             
         }
 
-        void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             pbStatus.Value = e.ProgressPercentage;
+            BigInteger[] ar = (BigInteger[])e.UserState;
+            tbMonitor.Text += String.Format("{0}!={1}\n", ar[0], ar[1]);
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

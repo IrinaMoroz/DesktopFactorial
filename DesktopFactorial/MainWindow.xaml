@@ -19,7 +19,7 @@
             x:Name="btCalc"
             Margin="475,10,10,425"
             BorderBrush="Black" BorderThickness="1" 
-            Click="OnClick1" ClickMode="Press">Calc</Button>
+            Click="button_ClickCalc" ClickMode="Press">Calc</Button>
 
         <ProgressBar x:Name="pbStatus" Margin="10,50,10,391" />
 
