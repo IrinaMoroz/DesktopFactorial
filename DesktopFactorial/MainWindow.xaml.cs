@@ -68,10 +68,18 @@ namespace DesktopFactorial
                 if (i >= 2)
                 {
                     res = GetFactorial(i);
-                    App.Current.Dispatcher.Invoke((Action)delegate()
+                    try
                     {
-                        tbMonitor.Text += String.Format("{0}!={1}\n", i, res.ToString());
-                    });
+                        App.Current.Dispatcher.Invoke((Action)delegate()
+                        {
+                            tbMonitor.Text += String.Format("{0}!={1}\n", i, res.ToString());
+                        });
+                    }catch(NullReferenceException )
+                    {
+                        MessageBox.Show("Exception appears");
+                    }
+
+                    
                     worker.ReportProgress(i);
                 }
                 Thread.Sleep(50);
