@@ -62,15 +62,13 @@ namespace DesktopFactorial
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            for (int i = 1; i <= (int)e.Argument; i++)
+            for (int i = 2; i <= (int)e.Argument; i++)
             {
                 BigInteger res = new BigInteger();
-                if (i >= 2)
-                {
-                    res = GetFactorial(i);
-                    worker.ReportProgress(i, new[]{i, res});                 
-                    
-                }
+                res = GetFactorial(i);
+                
+                worker.ReportProgress(i, new[]{i, res});
+                
                 Thread.Sleep(50);
             }
             
@@ -86,23 +84,16 @@ namespace DesktopFactorial
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
-            {
                 MessageBox.Show(e.Error.Message);
-            }
-
             btCalc.IsEnabled = true;
             tbValue.IsEnabled = true;
         }
 
         private BigInteger GetFactorial(int val)
         {
-            
             BigInteger res = 1;
             for (int i = 1; i <= val; i++)
-            {
                 res *= i;
-            }
-
             return res;
         }
     }
